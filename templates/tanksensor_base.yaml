@@ -1,0 +1,92 @@
+substitutions:
+  # Identity
+  name: tanksensor
+  friendly_name: TankSensor
+
+  # Deep sleep timing (in seconds)
+  run_duration_s: "63"
+  sleep_duration_s: "300"
+
+  # UART pins for A02YYUW ultrasonic sensor
+  uart_tx_pin: GPIO17
+  uart_rx_pin: GPIO18
+  uart_baud_rate: "9600"
+
+  # Battery ADC pin and calibration multiplier (voltage divider)
+  adc_pin: GPIO04
+  adc_multiplier: "4.237" # I used a 220k and 68k ohm divider, measuring across the 68k (pin to ground)
+  adc_attenuation: "12db"  # or auto
+
+  # Tank geometry (defaults; override per tank)
+  # assumes uniform cross-section for volume calculation
+  water_depth_mm: "2040"  # max water depth in mm - base to overflow/max surface height
+  sensor_offset_mm: "90"      # sensor height above full water surface
+  capacity_liters: "2500"
+
+deep_sleep:
+  id: deep_sleep_main
+  run_duration: ${run_duration_s}s
+  sleep_duration: ${sleep_duration_s}s
+
+uart:
+  id: uart_bus
+  tx_pin: ${uart_tx_pin}
+  rx_pin: ${uart_rx_pin}
+  baud_rate: ${uart_baud_rate}
+
+# Sensors
+sensor:
+  # Battery voltage via ADC (calibrated with multiplier)
+  - platform: adc
+    pin: ${adc_pin}
+    id: battery_voltage_raw
+    name: "${friendly_name} Battery Voltage"
+    unit_of_measurement: "V"
+    accuracy_decimals: 2
+    update_interval: 29s
+    filters:
+      - multiply: ${adc_multiplier}
+    attenuation: ${adc_attenuation}
+
+  # A02YYUW ultrasonic distance (mm)
+  - platform: a02yyuw
+    id: tank_distance
+    name: "${friendly_name} Tank Distance"
+    uart_id: uart_bus
+    update_interval: 5s
+    filters:
+      - filter_out: nan
+      - throttle_average: 5s
+    on_value:
+      then:
+        - lambda: |-
+            // x is the measured distance from sensor to water surface (mm)
+            float water_height_mm = ${water_depth_mm} - (x - ${sensor_offset_mm});
+            if (water_height_mm < 0) water_height_mm = 0;
+            if (water_height_mm > ${water_depth_mm}) water_height_mm = ${water_depth_mm};
+            float percent = (water_height_mm * 100.0f) / ${water_depth_mm};
+            float volume_l = (${capacity_liters} * percent) / 100.0f;
+            id(volume_storage).publish_state(volume_l);
+            id(percentage_storage).publish_state(percent);
+
+  # Published template sensors for derived metrics
+  - platform: template
+    id: volume_storage
+    name: "${friendly_name} Tank Volume"
+    unit_of_measurement: "L"
+    accuracy_decimals: 1
+    icon: 'mdi:water'
+    device_class: volume_storage
+    state_class: measurement
+
+  - platform: template
+    id: percentage_storage
+    name: "${friendly_name} Tank Percentage Full"
+    unit_of_measurement: "%"
+    accuracy_decimals: 1
+    icon: 'mdi:water-percent'
+    state_class: measurement
+
+# Optional: you can enable logger during development; beware wake time impact
+# logger:
+#   level: INFO

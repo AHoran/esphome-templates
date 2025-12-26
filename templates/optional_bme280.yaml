@@ -1,0 +1,27 @@
+substitutions:
+  # I2C pins and address (override as needed)
+  i2c_sda_pin: GPIO06
+  i2c_scl_pin: GPIO07
+  bme280_address: "0x76"
+
+i2c:
+  sda: ${i2c_sda_pin}
+  scl: ${i2c_scl_pin}
+  scan: true
+
+sensor:
+  - platform: bme280_i2c
+    address: ${bme280_address}
+    temperature:
+      name: "${friendly_name} Temperature"
+      id: bme280_temperature
+      oversampling: 16x
+    pressure:
+      name: "${friendly_name} Pressure"
+      id: bme280_pressure
+      oversampling: 16x
+    humidity:
+      name: "${friendly_name} Humidity"
+      id: bme280_humidity
+      oversampling: 16x
+    update_interval: 30s
