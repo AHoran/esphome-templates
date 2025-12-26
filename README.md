@@ -137,10 +137,6 @@ Omit the `climate` package line if your tank doesn't have temperature/humidity s
 - **[tanksensor_base.yaml](templates/tanksensor_base.yaml)**: Core ultrasonic sensor, battery ADC, and derived template sensors.
 - **[optional_bme280.yaml](templates/optional_bme280.yaml)**: I2C BME280 environmental sensors (optional include).
 
-## Examples
-
-See [tanksensor.yaml](tanksensor.yaml) (S3 + BME280) and [tanksensor-small.yaml](tanksensor-small.yaml) (C3, no BME280) for working examples.
-
 ## Notes
 
 - **Sensor derivation**: Water height → tank volume & percentage in real-time via `on_value` lambda.
