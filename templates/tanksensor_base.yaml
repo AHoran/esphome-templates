@@ -53,7 +53,6 @@ sensor:
     id: tank_distance
     name: "${friendly_name} Tank Distance"
     uart_id: uart_bus
-    update_interval: 5s
     filters:
       - filter_out: nan
       - throttle_average: 5s
