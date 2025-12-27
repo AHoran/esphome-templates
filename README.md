@@ -117,34 +117,23 @@ substitutions:
   sensor_offset_mm: 120      # Sensor distance above full surface
   capacity_liters: 1500      # Total tank capacity
 ```
-
 **Measurement Diagram:**
 
 ```mermaid
-graph TD
-    S[Ultrasonic Sensor]
-    SO[sensor_offset_mm]
-    FL[Max Water Level]
-    WD[water_depth_mm]
-    TB[Tank Bottom]
-    
-    S --> SO
-    SO --> FL
-    FL --> WD
-    WD --> TB
+flowchart TD
+    S[Sensor] ---|sensor_offset_mm| WL[Max Water Level]
+    WL ---|water_depth_mm| TB[Tank Bottom]
     
     style S fill:#757575,stroke:#424242,color:#fff
-    style FL fill:#4CAF50,stroke:#2E7D32,color:#fff
+    style WL fill:#4CAF50,stroke:#2E7D32,color:#fff
     style TB fill:#333,stroke:#000,color:#fff
-    style SO fill:#FFF9C4,stroke:#F57F17,color:#000
-    style WD fill:#BBDEFB,stroke:#1565C0,color:#000
 ```
 
 **How to measure:**
 - **sensor_offset_mm**: Distance from sensor mounting point down to the max/full water level
 - **water_depth_mm**: Distance from max water level down to tank bottom
 - **capacity_liters**: Total tank capacity at full level
-- **Distance Reading**: Ultrasonic sensor measures from sensor to current water surface
+- **Distance Reading**:  Ultrasonic sensor measures from sensor to current water surface
 - **Water Height** (calculated): `water_depth_mm - (distance - sensor_offset_mm)`
 
 ### Deep Sleep
