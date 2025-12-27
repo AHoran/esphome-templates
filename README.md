@@ -38,10 +38,10 @@ substitutions:
   adc_multiplier: 4.237
   adc_attenuation: "12db"
 
-  # Tank geometry
-  water_depth_mm: 2040
-  sensor_offset_mm: 90      # height of sensor above full water surface
-  capacity_liters: 2500
+  # Tank geometry (quoted to satisfy globals initial_value)
+  water_depth_mm: "2040"
+  sensor_offset_mm: "90"      # height of sensor above full water surface
+  capacity_liters: "2500"
 
   # I2C for BME280 (if using one)
   i2c_sda_pin: GPIO06
@@ -109,13 +109,13 @@ substitutions:
 
 ### Tank Geometry
 
-Adjust for your physical setup:
+Adjust for your physical setup (quote these three to satisfy globals):
 
 ```yaml
 substitutions:
-  water_depth_mm: 1800       # Maximum water depth
-  sensor_offset_mm: 120      # Sensor distance above full surface
-  capacity_liters: 1500      # Total tank capacity
+  water_depth_mm: "1800"       # Maximum water depth
+  sensor_offset_mm: "120"      # Sensor distance above full surface
+  capacity_liters: "1500"      # Total tank capacity
 ```
 
 ### Deep Sleep
@@ -143,8 +143,8 @@ Omit the `climate` package line if your tank doesn't have temperature/humidity s
 - **Battery efficiency**: ADC polls every 29s, BME280 every 30s; ultrasonic throttled to 5s average.
 - **Deep sleep**: Defaults 63s run + 300s (5min) sleep. Increase `run_duration_s` if sensors need warm-up time.
 - **No hardcoded secrets**: All passwords & keys use `!secret` references.
- - **Version pinning**: Use a tagged release (e.g., `@v0.1.0`) in `packages` to avoid breaking changes from `main`.
- - **Substitutions typing**: Prefer unquoted numbers for numeric values (e.g., `capacity_liters: 2500`). Geometry and capacity are applied at runtime via template globals to ensure overrides take effect inside calculation lambdas.
+ - **Version pinning**: Use a tagged release (e.g., `@v0.1.1`) in `packages` to avoid breaking changes from `main`.
+ - **Substitutions typing**: Quote geometry and capacity substitutions (`water_depth_mm`, `sensor_offset_mm`, `capacity_liters`) to satisfy `globals.initial_value`. Other numeric substitutions (e.g., `run_duration_s`, `sleep_duration_s`, `uart_baud_rate`, `adc_multiplier`) can remain unquoted.
 
 ## Troubleshooting
 

@@ -90,13 +90,23 @@ sensor:
 globals:
   - id: water_depth_mm_cfg
     type: float
-    initial_value: "${water_depth_mm}"
+    initial_value: "0"
   - id: sensor_offset_mm_cfg
     type: float
-    initial_value: "${sensor_offset_mm}"
+    initial_value: "0"
   - id: capacity_liters_cfg
     type: float
-    initial_value: "${capacity_liters}"
+    initial_value: "0"
+
+esphome:
+  on_boot:
+    priority: 800
+    then:
+      - lambda: |-
+          // Assign globals from substitutions at runtime to ensure overrides apply
+          id(water_depth_mm_cfg) = ${water_depth_mm};
+          id(sensor_offset_mm_cfg) = ${sensor_offset_mm};
+          id(capacity_liters_cfg) = ${capacity_liters};
 
 # Optional: you can enable logger during development; beware wake time impact
 # logger:
