@@ -38,10 +38,10 @@ substitutions:
   adc_multiplier: 4.237
   adc_attenuation: "12db"
 
-  # Tank geometry (quoted to satisfy globals initial_value)
-  water_depth_mm: "2040"
-  sensor_offset_mm: "90"      # height of sensor above full water surface
-  capacity_liters: "2500"
+  # Tank geometry (unquoted ok; runtime init handles typing)
+  water_depth_mm: 2040
+  sensor_offset_mm: 90      # height of sensor above full water surface
+  capacity_liters: 2500
 
   # I2C for BME280 (if using one)
   i2c_sda_pin: GPIO06
@@ -69,9 +69,9 @@ wifi:
   fast_connect: true
 
 packages:
-  base: github://AHoran/esphome-templates/templates/tanksensor_base.yaml@v0.1.2
+  base: github://AHoran/esphome-templates/templates/tanksensor_base.yaml@v0.1.3
   # Uncomment only if this tank has BME280:
-  # climate: github://AHoran/esphome-templates/templates/optional_bme280.yaml@v0.1.2
+  # climate: github://AHoran/esphome-templates/templates/optional_bme280.yaml@v0.1.3
 ```
 
 ### 2. Ensure secrets are set
@@ -109,13 +109,13 @@ substitutions:
 
 ### Tank Geometry
 
-Adjust for your physical setup (quote these three to satisfy globals):
+Adjust for your physical setup:
 
 ```yaml
 substitutions:
-  water_depth_mm: "1800"       # Maximum water depth
-  sensor_offset_mm: "120"      # Sensor distance above full surface
-  capacity_liters: "1500"      # Total tank capacity
+  water_depth_mm: 1800       # Maximum water depth
+  sensor_offset_mm: 120      # Sensor distance above full surface
+  capacity_liters: 1500      # Total tank capacity
 ```
 
 ### Deep Sleep
@@ -143,8 +143,8 @@ Omit the `climate` package line if your tank doesn't have temperature/humidity s
 - **Battery efficiency**: ADC polls every 29s, BME280 every 30s; ultrasonic throttled to 5s average.
 - **Deep sleep**: Defaults 63s run + 300s (5min) sleep. Increase `run_duration_s` if sensors need warm-up time.
 - **No hardcoded secrets**: All passwords & keys use `!secret` references.
- - **Version pinning**: Use a tagged release (e.g., `@v0.1.1`) in `packages` to avoid breaking changes from `main`.
- - **Substitutions typing**: Quote geometry and capacity substitutions (`water_depth_mm`, `sensor_offset_mm`, `capacity_liters`) to satisfy `globals.initial_value`. Other numeric substitutions (e.g., `run_duration_s`, `sleep_duration_s`, `uart_baud_rate`, `adc_multiplier`) can remain unquoted.
+ - **Version pinning**: Use a tagged release (e.g., `@v0.1.3`) in `packages` to avoid breaking changes from `main`.
+ - **Substitutions typing**: Geometry and capacity can be unquoted; the template initializes globals at runtime from substitutions. You may still quote if you prefer; both are accepted. Other numeric substitutions (e.g., `run_duration_s`, `sleep_duration_s`, `uart_baud_rate`, `adc_multiplier`) can be unquoted.
 
 ## Troubleshooting
 
