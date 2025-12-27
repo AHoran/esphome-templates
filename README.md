@@ -121,18 +121,17 @@ substitutions:
 **Measurement Diagram:**
 
 ```mermaid
----
-config:
-  theme: default
----
-flowchart TB
-    S[🔲 Ultrasonic Sensor]
-    SO["↕<br/>sensor_offset_mm<br/>(Sensor to Full Level)"]
-    FL["━━━━━━━━━━━━━━━━━<br/>Max Water Level"]
-    WD["↕<br/>water_depth_mm<br/>(Full Level to Bottom)"]
-    TB["▓▓▓▓▓ Tank Bottom ▓▓▓▓▓"]
+graph TD
+    S[Ultrasonic Sensor]
+    SO[sensor_offset_mm]
+    FL[Max Water Level]
+    WD[water_depth_mm]
+    TB[Tank Bottom]
     
-    S --> SO --> FL --> WD --> TB
+    S --> SO
+    SO --> FL
+    FL --> WD
+    WD --> TB
     
     style S fill:#757575,stroke:#424242,color:#fff
     style FL fill:#4CAF50,stroke:#2E7D32,color:#fff
@@ -142,9 +141,9 @@ flowchart TB
 ```
 
 **How to measure:**
-- **`sensor_offset_mm`**: Distance from sensor mounting point down to the max/full water level
-- **`water_depth_mm`**: Distance from max water level down to tank bottom
-- **`capacity_liters`**: Total tank capacity at full level
+- **sensor_offset_mm**: Distance from sensor mounting point down to the max/full water level
+- **water_depth_mm**: Distance from max water level down to tank bottom
+- **capacity_liters**: Total tank capacity at full level
 - **Distance Reading**: Ultrasonic sensor measures from sensor to current water surface
 - **Water Height** (calculated): `water_depth_mm - (distance - sensor_offset_mm)`
 
