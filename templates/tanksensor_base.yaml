@@ -40,7 +40,7 @@ sensor:
   - platform: adc
     pin: ${adc_pin}
     id: battery_voltage_raw
-    name: "${friendly_name} Battery Voltage"
+    name: "Battery Voltage"
     unit_of_measurement: "V"
     accuracy_decimals: 2
     update_interval: 29s
@@ -51,7 +51,7 @@ sensor:
   # A02YYUW ultrasonic distance (mm)
   - platform: a02yyuw
     id: tank_distance
-    name: "${friendly_name} Tank Distance"
+    name: "Tank Distance"
     uart_id: uart_bus
     filters:
       - filter_out: nan
@@ -71,7 +71,7 @@ sensor:
   # Published template sensors for derived metrics
   - platform: template
     id: volume_storage
-    name: "${friendly_name} Tank Volume"
+    name: "Tank Volume"
     unit_of_measurement: "L"
     accuracy_decimals: 1
     icon: 'mdi:water'
@@ -80,7 +80,7 @@ sensor:
 
   - platform: template
     id: percentage_storage
-    name: "${friendly_name} Tank Percentage Full"
+    name: "Tank Percentage Full"
     unit_of_measurement: "%"
     accuracy_decimals: 1
     icon: 'mdi:water-percent'
