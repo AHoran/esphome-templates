@@ -119,32 +119,28 @@ substitutions:
 ```
 **Measurement Diagram:**
 
-<svg width="400" height="500" xmlns="http://www.w3.org/2000/svg">
-  <!-- Sensor -->
-  <rect x="140" y="20" width="80" height="40" fill="#757575" stroke="#424242" stroke-width="2"/>
-  <text x="180" y="45" text-anchor="middle" font-size="14" fill="white" font-weight="bold">Sensor</text>
-  
-  <!-- Sensor offset arrow and label -->
-  <line x1="360" y1="70" x2="360" y2="130" stroke="#F57F17" stroke-width="2"/>
-  <polygon points="360,135 355,125 365,125" fill="#F57F17"/>
-  <text x="250" y="105" font-size="12" fill="#F57F17" font-weight="bold">sensor_offset_mm</text>
-  
-  <!-- Max water level line -->
-  <line x1="50" y1="140" x2="350" y2="140" stroke="#4CAF50" stroke-width="3"/>
-  <text x="15" y="145" font-size="12" fill="#4CAF50" font-weight="bold">Max Water Level</text>
-  
-  <!-- Water (blue rectangle) -->
-  <rect x="50" y="140" width="200" height="240" fill="#2196F3" opacity="0.7"/>
-  
-  <!-- Water depth arrow and label -->
-  <line x1="360" y1="140" x2="360" y2="380" stroke="#1565C0" stroke-width="2"/>
-  <polygon points="360,385 355,375 365,375" fill="#1565C0"/>
-  <text x="250" y="265" font-size="12" fill="#1565C0" font-weight="bold">water_depth_mm</text>
-  
-  <!-- Tank bottom -->
-  <rect x="50" y="380" width="200" height="30" fill="#333" stroke="#000" stroke-width="2"/>
-  <text x="150" y="402" text-anchor="middle" font-size="12" fill="white" font-weight="bold">Tank Bottom</text>
-</svg>
+**Measurement Diagram:**
+
+```
+┌─────────────────┐
+│   Sensor        │
+└────────┬────────┘
+         │
+         │ sensor_offset_mm
+         │
+         ▼
+═════════════════════  ← Max Water Level
+┃                   ┃
+┃                   ┃
+┃    Water Level    ┃
+┃      (varies)     ┃
+┃                   ┃
+         │
+         │ water_depth_mm
+         │
+         ▼
+═════════════════════  ← Tank Bottom
+```
 
 **How to measure:**
 - **sensor_offset_mm**: Distance from sensor mounting point down to the max/full water level
