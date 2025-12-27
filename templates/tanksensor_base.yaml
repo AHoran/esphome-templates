@@ -4,24 +4,24 @@ substitutions:
   friendly_name: TankSensor
 
   # Deep sleep timing (in seconds)
-  run_duration_s: "63"
-  sleep_duration_s: "300"
+  run_duration_s: 63
+  sleep_duration_s: 300
 
   # UART pins for A02YYUW ultrasonic sensor
   uart_tx_pin: GPIO17
   uart_rx_pin: GPIO18
-  uart_baud_rate: "9600"
+  uart_baud_rate: 9600
 
   # Battery ADC pin and calibration multiplier (voltage divider)
   adc_pin: GPIO04
-  adc_multiplier: "4.237" # I used a 220k and 68k ohm divider, measuring across the 68k (pin to ground)
+  adc_multiplier: 4.237 # I used a 220k and 68k ohm divider, measuring across the 68k (pin to ground)
   adc_attenuation: "12db"  # or auto
 
   # Tank geometry (defaults; override per tank)
   # assumes uniform cross-section for volume calculation
-  water_depth_mm: "2040"  # max water depth in mm - base to overflow/max surface height
-  sensor_offset_mm: "90"      # sensor height above full water surface
-  capacity_liters: "2500"
+  water_depth_mm: 2040  # max water depth in mm - base to overflow/max surface height
+  sensor_offset_mm: 90      # sensor height above full water surface
+  capacity_liters: 2500
 
 deep_sleep:
   id: deep_sleep_main
@@ -60,11 +60,11 @@ sensor:
       then:
         - lambda: |-
             // x is the measured distance from sensor to water surface (mm)
-            float water_height_mm = ${water_depth_mm} - (x - ${sensor_offset_mm});
+            float water_height_mm = id(water_depth_mm_cfg) - (x - id(sensor_offset_mm_cfg));
             if (water_height_mm < 0) water_height_mm = 0;
-            if (water_height_mm > ${water_depth_mm}) water_height_mm = ${water_depth_mm};
-            float percent = (water_height_mm * 100.0f) / ${water_depth_mm};
-            float volume_l = (${capacity_liters} * percent) / 100.0f;
+            if (water_height_mm > id(water_depth_mm_cfg)) water_height_mm = id(water_depth_mm_cfg);
+            float percent = (water_height_mm * 100.0f) / id(water_depth_mm_cfg);
+            float volume_l = (id(capacity_liters_cfg) * percent) / 100.0f;
             id(volume_storage).publish_state(volume_l);
             id(percentage_storage).publish_state(percent);
 
@@ -85,6 +85,18 @@ sensor:
     accuracy_decimals: 1
     icon: 'mdi:water-percent'
     state_class: measurement
+
+# Runtime-configurable constants to ensure overrides apply in packages, needed for lambda
+globals:
+  - id: water_depth_mm_cfg
+    type: float
+    initial_value: ${water_depth_mm}
+  - id: sensor_offset_mm_cfg
+    type: float
+    initial_value: ${sensor_offset_mm}
+  - id: capacity_liters_cfg
+    type: float
+    initial_value: ${capacity_liters}
 
 # Optional: you can enable logger during development; beware wake time impact
 # logger:
