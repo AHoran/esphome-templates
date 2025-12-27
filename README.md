@@ -69,9 +69,9 @@ wifi:
   fast_connect: true
 
 packages:
-  base: github://AHoran/esphome-templates/templates/tanksensor_base.yaml@v0.1.1
+  base: github://AHoran/esphome-templates/templates/tanksensor_base.yaml@v0.1.2
   # Uncomment only if this tank has BME280:
-  # climate: github://AHoran/esphome-templates/templates/optional_bme280.yaml@v0.1.1
+  # climate: github://AHoran/esphome-templates/templates/optional_bme280.yaml@v0.1.2
 ```
 
 ### 2. Ensure secrets are set
