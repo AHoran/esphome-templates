@@ -163,6 +163,26 @@ substitutions:
 
 Omit the `climate` package line if your tank doesn't have temperature/humidity sensors.
 
+### Low-Battery Extended Sleep (Optional)
+
+When battery voltage drops at or below a threshold, the device can sleep for a longer duration to allow more charging time. This feature is **disabled by default** and has no effect unless explicitly enabled.
+
+```yaml
+substitutions:
+  # Enable low-battery extended sleep
+  low_battery_sleep_enabled: "true"
+
+  # Voltage at or below which extended sleep kicks in (default: 3.60V)
+  battery_low_threshold_v: "3.60"
+
+  # Sleep duration when battery is low, in seconds (default: 1800 = 30 min)
+  sleep_duration_low_battery_s: "1800"
+```
+
+When enabled, the battery voltage is evaluated each wake cycle. If it reads at or below `battery_low_threshold_v`, the device sleeps for `sleep_duration_low_battery_s` instead of the normal `sleep_duration_s`. The normal wake window completes first; sleep duration is selected when the ADC reading comes in (~29 s into the run window).
+
+Leave `low_battery_sleep_enabled` at `"false"` (the default) if you don't need this feature — behavior is identical to previous versions.
+
 ## Templates
 
 - **[tanksensor_base.yaml](templates/tanksensor_base.yaml)**: Core ultrasonic sensor, battery ADC, and derived template sensors.

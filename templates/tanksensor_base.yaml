@@ -23,6 +23,14 @@ substitutions:
   sensor_offset_mm: 90      # sensor height above full water surface
   capacity_liters: 2500
 
+  # Low-battery extended sleep (optional, default disabled)
+  # Set low_battery_sleep_enabled to "true" to activate.
+  # When enabled and battery_voltage <= battery_low_threshold_v, the device
+  # will enter deep sleep for sleep_duration_low_battery_s instead of sleep_duration_s.
+  low_battery_sleep_enabled: "false"
+  battery_low_threshold_v: "3.60"
+  sleep_duration_low_battery_s: "1800"  # 30 minutes
+
 deep_sleep:
   id: deep_sleep_main
   run_duration: ${run_duration_s}s
@@ -47,6 +55,15 @@ sensor:
     filters:
       - multiply: ${adc_multiplier}
     attenuation: ${adc_attenuation}
+    on_value:
+      then:
+        - if:
+            condition:
+              lambda: 'return ${low_battery_sleep_enabled} && x <= ${battery_low_threshold_v}f;'
+            then:
+              - deep_sleep.enter:
+                  id: deep_sleep_main
+                  sleep_duration: ${sleep_duration_low_battery_s}s
 
   # A02YYUW ultrasonic distance (mm)
   - platform: a02yyuw
